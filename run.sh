@@ -10,8 +10,8 @@ if [[ $MAKE_DPKG -eq 1 ]] ; then command="/bin/bash ./make_dpkg.sh"; fi
 
 if [ -n "$http_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env http_proxy=$http_proxy "; fi
 if [ -n "$https_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env https_proxy=$https_proxy "; fi
+if [ -n "$DNS_SERVER" ]; then RUN_OPTIONS=" $RUN_OPTIONS --dns=$DNS_SERVER "; fi
 
-#docker run --rm --privileged=true --dns=172.28.168.170 --name=$containerName -ti \
 docker run --rm --privileged=true --name=$containerName -ti \
 	$RUN_OPTIONS \
 	--env CC=$CC \
