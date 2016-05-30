@@ -8,9 +8,11 @@ services:
 before_install:
         - docker pull nvml/ubuntu:16.04
         #- ./buildFromScratch.sh
+        - ./run.sh
 
 script:
-        - ./run.sh
+        #- ./run.sh
+        - echo "The end"
 
 env:
 #  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND
