@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-imageName=wojtuss/nvml-ubuntu1604:1
-containerName=nvml-ubuntu1604
+imageName=nvml/ubuntu:16.04
+containerName=nvml-ubuntu-16.04
 
 if [ "$CC" = "clang" ]; then export CXX="clang++"; else export CXX="g++"; fi
 if [[ $MAKE_DPKG -eq 0 ]] ; then command="/bin/bash ./make.sh"; fi

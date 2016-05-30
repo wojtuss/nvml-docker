@@ -9,6 +9,10 @@
 FROM ubuntu:16.04
 MAINTAINER wojciech.uss@intel.com
 
+# Define variables which can be received at build-time
+ARG http_proxy
+ARG https_proxy
+
 ENV NOTTY=1
 
 # Update the Apt cache and install basic tools

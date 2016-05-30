@@ -4,7 +4,7 @@ set -e
 mount -t tmpfs none /tmp -osize=4G
 
 # Get nvml source
-git clone https://github.com/wojtuss/nvml.git
+git clone https://github.com/pmem/nvml.git
 pushd nvml
 
 # Configure tests
