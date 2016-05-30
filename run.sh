@@ -4,7 +4,7 @@ set -e
 imageName=nvml/ubuntu:16.04
 containerName=nvml-ubuntu-16.04
 
-if [ "$CC" = "clang" ]; then export CXX="clang++"; else export CXX="g++"; fi
+if [[ $CC == "clang" ]]; then export CXX="clang++"; else export CXX="g++"; fi
 if [[ $MAKE_DPKG -eq 0 ]] ; then command="/bin/bash ./make.sh"; fi
 if [[ $MAKE_DPKG -eq 1 ]] ; then command="/bin/bash ./make_dpkg.sh"; fi
 echo $command
@@ -17,6 +17,5 @@ docker run --rm --privileged=true --dns=172.28.168.170 --name=$containerName -ti
 	--env EXTRA_CFLAGS=$EXTRA_CFLAGS \
 	--env MAKE_DPKG=$MAKE_DPKG \
 	--env REMOTE_TESTS=$REMOTE_TESTS \
-	$imageName /bin/bash
-	#$imageName $command
+	$imageName $command
 
