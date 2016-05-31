@@ -6,12 +6,10 @@ services:
         - docker
 
 before_install:
-        #- time docker pull nvml/ubuntu:16.04
-        - time ./buildFromScratch.sh
+        - docker pull nvml/ubuntu:16.04
 
 script:
-        #- ./run.sh
-        - echo "The end"
+        - ./run.sh
 
 env:
 #  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND
