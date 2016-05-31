@@ -6,8 +6,8 @@ services:
         - docker
 
 before_install:
-        - time docker pull nvml/ubuntu:16.04
-        #- ./buildFromScratch.sh
+        #- time docker pull nvml/ubuntu:16.04
+        - time ./buildFromScratch.sh
 
 script:
         #- ./run.sh
