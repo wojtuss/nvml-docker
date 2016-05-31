@@ -1,16 +1,9 @@
 #!/bin/bash
 set -e
 
-mount -t tmpfs none /tmp -osize=4G
-
-# Get nvml source
-git clone https://github.com/pmem/nvml.git
-pushd nvml
-
-# Configure tests
-cp ../configure_tests.sh .
-./configure_tests.sh
-rm -f configure_tests.sh
+# Get and prepare nvml source
+./prepare.sh
 
 # Build all and run tests
+cd nvml
 make -j2 dpkg

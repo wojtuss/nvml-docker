@@ -9,7 +9,7 @@ PMEM_FS_DIR_FORCE_PMEM=1
 EOF
 
 # Configure remote tests
-if [ "$REMOTE_TESTS" == "1" ]; then
+if [[ $REMOTE_TESTS -eq 1 ]]; then
 	echo "Configuring remote tests"
 	cat << EOF >> src/test/testconfig.sh
 NODE[0]=127.0.0.1
@@ -20,6 +20,8 @@ NODE_WORKING_DIR[1]=/tmp/node1
 NODE_ADDR[1]=127.0.0.1
 EOF
 
+	mkdir -p ~/.ssh/cm
+
 	cat << EOF >> ~/.ssh/config
 Host 127.0.0.1
 	StrictHostKeyChecking no
@@ -28,7 +30,6 @@ Host 127.0.0.1
 	ControlPersist 10m
 EOF
 
-	mkdir -p ~/.ssh/cm/
 	ssh-keygen -t rsa -C $USER@$HOSTNAME -P '' -f ~/.ssh/id_rsa
 	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 	ssh 127.0.0.1 exit 0

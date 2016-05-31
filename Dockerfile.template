@@ -13,7 +13,7 @@ ENV NOTTY=1
 
 # Update the Apt cache and install basic tools
 RUN apt-get update
-RUN apt-get install -y software-properties-common libunwind8-dev autoconf devscripts pkg-config ssh git gcc clang debhelper
+RUN apt-get install -y software-properties-common libunwind8-dev autoconf devscripts pkg-config ssh git gcc clang debhelper vim sudo whois libc6-dbg
 
 # Install valgrind
 RUN git clone https://github.com/wojtuss/valgrind.git \
@@ -35,9 +35,15 @@ RUN cd $libfabric_dir \
 	&& make -j2 \
 	&& make install
 
-# Copy scripts into the image
-COPY make.sh ./make.sh
-COPY make_dpkg.sh make_dpkg.sh
-COPY configure_tests.sh configure_tests.sh
+# Add user
+ENV USER nvmluser
+RUN useradd -m $USER -g sudo -p `mkpasswd nvmlpass`
 
-WORKDIR /
+# Copy scripts into the image
+COPY prepare.sh /home/$USER/prepare.sh
+COPY make.sh /home/$USER/make.sh
+COPY make_dpkg.sh /home/$USER/make_dpkg.sh
+COPY configure_tests.sh /home/$USER/configure_tests.sh
+
+USER $USER
+WORKDIR /home/$USER
