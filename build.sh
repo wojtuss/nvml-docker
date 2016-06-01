@@ -30,16 +30,22 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Mount filesystem for ?
-echo 'nvmlpass' | sudo -S mount -t tmpfs none /tmp -osize=4G
+cp Dockerfile.template Dockerfile
 
-# Get nvml source
-git clone https://github.com/pmem/nvml.git
-cd nvml
+repo=nvml
+name=ubuntu:16.04
+tag=${repo}/${name}
 
-# Configure tests
-echo 'vnmlpass' | sudo -S service ssh start
-cp ../configure_tests.sh .
-./configure_tests.sh
-rm -f configure_tests.sh
+if [ -n "$http_proxy" ]
+then
+	BUILD_ARGS=" --build-arg http_proxy=$http_proxy "
+	sed -i '/MAINTAINER .*/a ARG http_proxy' Dockerfile
+fi
+if [ -n "$https_proxy" ]
+then
+	BUILD_ARGS="$BUILD_ARGS --build-arg https_proxy=$https_proxy "
+	sed -i '/MAINTAINER .*/a ARG https_proxy' Dockerfile
+fi
+
+docker build -t $tag $BUILD_ARGS .
 
