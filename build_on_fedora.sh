@@ -30,10 +30,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cp Dockerfile.template Dockerfile
+cp Dockerfile.fedora Dockerfile
 
 repo=nvml
-name=ubuntu:16.04
+name=fedora:23
 tag=${repo}/${name}
 
 if [ -n "$http_proxy" ]
