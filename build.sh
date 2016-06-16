@@ -34,8 +34,8 @@ imageName=nvml/ubuntu:16.04
 containerName=nvml-ubuntu-16.04
 
 if [[ $CC == "clang" ]]; then export CXX="clang++"; else export CXX="g++"; fi
-if [[ $MAKE_DPKG -eq 0 ]] ; then command="/bin/bash ./make.sh"; fi
-if [[ $MAKE_DPKG -eq 1 ]] ; then command="/bin/bash ./make_dpkg.sh"; fi
+if [[ $MAKE_DPKG -eq 0 ]] ; then command="/bin/bash ./run-build.sh"; fi
+if [[ $MAKE_DPKG -eq 1 ]] ; then command="/bin/bash ./run-build-package.sh"; fi
 
 if [ -n "$http_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env http_proxy=$http_proxy "; fi
 if [ -n "$https_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env https_proxy=$https_proxy "; fi

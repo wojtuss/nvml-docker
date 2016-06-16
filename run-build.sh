@@ -30,39 +30,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Configure tests
-cat << EOF > src/test/testconfig.sh
-NON_PMEM_FS_DIR=/tmp
-PMEM_FS_DIR=/tmp
-PMEM_FS_DIR_FORCE_PMEM=1
-EOF
+# Get and prepare nvml source
+./prepare-for-build.sh
 
-# Configure remote tests
-if [[ $REMOTE_TESTS -eq 1 ]]; then
-	echo "Configuring remote tests"
-	cat << EOF >> src/test/testconfig.sh
-NODE[0]=127.0.0.1
-NODE_WORKING_DIR[0]=/tmp/node0
-NODE_ADDR[0]=127.0.0.1
-NODE[1]=127.0.0.1
-NODE_WORKING_DIR[1]=/tmp/node1
-NODE_ADDR[1]=127.0.0.1
-EOF
-
-	mkdir -p ~/.ssh/cm
-
-	cat << EOF >> ~/.ssh/config
-Host 127.0.0.1
-	StrictHostKeyChecking no
-	ControlPath ~/.ssh/cm/%r@%h:%p
-	ControlMaster auto
-	ControlPersist 10m
-EOF
-
-	ssh-keygen -t rsa -C $USER@$HOSTNAME -P '' -f ~/.ssh/id_rsa
-	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-	ssh 127.0.0.1 exit 0
-else
-	echo "Skipping remote tests"
-fi
+# Build all and run tests
+cd nvml
+make check-license && make cstyle && make -j2 USE_LIBUNWIND=1 && make -j2 test USE_LIBUNWIND=1 && make check && make DESTDIR=/tmp source
 

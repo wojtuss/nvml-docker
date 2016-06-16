@@ -1,3 +1,4 @@
+#!/bin/bash -e
 #
 # Copyright 2014-2016, Intel Corporation
 #
@@ -29,50 +30,47 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Pull base image
-FROM fedora:23
-MAINTAINER wojciech.uss@intel.com
+# Configure tests
+cat << EOF > src/test/testconfig.sh
+NON_PMEM_FS_DIR=/tmp
+PMEM_FS_DIR=/tmp
+PMEM_FS_DIR_FORCE_PMEM=1
+EOF
 
-# Update the Apt cache and install basic tools
-RUN dnf install -y git gcc clang openssh-server autoconf automake make wget tar lbzip2 passwd sudo pkgconfig \
-	procps-ng net-tools
+# Configure remote tests
+if [[ $REMOTE_TESTS -eq 1 ]]; then
+	echo "Configuring remote tests"
+	cat << EOF >> src/test/testconfig.sh
+NODE[0]=127.0.0.1
+NODE_WORKING_DIR[0]=/tmp/node0
+NODE_ADDR[0]=127.0.0.1
+NODE[1]=127.0.0.1
+NODE_WORKING_DIR[1]=/tmp/node1
+NODE_ADDR[1]=127.0.0.1
+EOF
 
-# Install valgrind
-RUN git clone https://github.com/wojtuss/valgrind.git \
-	&& cd valgrind \
-	&& ./autogen.sh \
-	&& ./configure \
-	&& make \
-	&& make install
+	mkdir -p ~/.ssh/cm
 
-# Install libfabric
-ENV libfabric_ver 1.2.0
-ENV libfabric_url https://github.com/ofiwg/libfabric/releases/download
-ENV libfabric_dir libfabric-$libfabric_ver
-ENV libfabric_tarball ${libfabric_dir}.tar.bz2
-RUN wget "${libfabric_url}/v${libfabric_ver}/${libfabric_tarball}"
-RUN tar -xf $libfabric_tarball
-RUN cd $libfabric_dir \
-	&& ./configure --prefix=/usr --enable-sockets \
-	&& make -j2 \
-	&& make install
+	cat << EOF >> ~/.ssh/config
+Host 127.0.0.1
+	StrictHostKeyChecking no
+	ControlPath ~/.ssh/cm/%r@%h:%p
+	ControlMaster auto
+	ControlPersist 10m
+EOF
 
-# Add user
-ENV USER nvmluser
-RUN useradd -m $USER
-RUN echo nvmlpass | passwd $USER --stdin
-RUN gpasswd wheel -a nvmluser
+	if [ ! -f /etc/ssh/ssh_host_rsa_key ]
+	then
+		(echo 'nvmlpass' | sudo -S ssh-keygen -t rsa -C $USER@$HOSTNAME -P '' -f /etc/ssh/ssh_host_rsa_key)
+	fi
+	echo 'nvmlpass' | sudo -S sh -c 'cat /etc/ssh/ssh_host_rsa_key.pub >> /etc/ssh/authorized_keys'
+	ssh-keygen -t rsa -C $USER@$HOSTNAME -P '' -f ~/.ssh/id_rsa
+	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	chmod -R 700 ~/.ssh
+	chmod 640 ~/.ssh/authorized_keys
+	chmod 600 ~/.ssh/config
+	ssh 127.0.0.1 exit 0
+else
+	echo "Skipping remote tests"
+fi
 
-# Copy scripts into the image
-COPY prepare-for-build.sh /home/$USER/prepare-for-build.sh
-COPY build.sh /./home/$USER/build.sh
-COPY build-package.sh /home/$USER/build-package.sh
-COPY configure-tests.sh /home/$USER/configure-tests.sh
-
-RUN dnf install -y jemalloc findutils man libunwind-devel file rpm-build rpm-build-libs
-RUN dnf install -y which
-
-ENV PLATFORM fedora
-
-USER $USER
-WORKDIR /home/$USER

@@ -31,8 +31,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Get and prepare nvml source
-./prepare.sh
+./prepare-for-build.sh
 
 # Build all and run tests
 cd nvml
-make -j2 dpkg
+if [[ $PLATFORM == "fedora" ]]
+then
+	make -j2 rpm
+else
+	make -j2 dpkg
+fi
+

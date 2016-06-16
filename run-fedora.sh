@@ -30,16 +30,24 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Mount filesystem for ?
-echo 'nvmlpass' | sudo -S mount -t tmpfs none /tmp -osize=4G
+imageName=nvml/fedora:23
+containerName=nvml-fedora-23
 
-# Get nvml source
-git clone https://github.com/pmem/nvml.git
-cd nvml
+if [[ $CC == "clang" ]]; then export CXX="clang++"; else export CXX="g++"; fi
+if [[ $MAKE_DPKG -eq 0 ]] ; then command="/bin/bash ./build.sh"; fi
+if [[ $MAKE_DPKG -eq 1 ]] ; then command="/bin/bash ./build-dpkg.sh"; fi
 
-# Configure tests (e.g. ssh for remote tests)
-echo 'vnmlpass' | sudo -S service ssh start
-cp ../configure_tests.sh .
-./configure_tests.sh
-rm -f configure_tests.sh
+if [ -n "$http_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env http_proxy=$http_proxy "; fi
+if [ -n "$https_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env https_proxy=$https_proxy "; fi
+if [ -n "$DNS_SERVER" ]; then RUN_OPTIONS=" $RUN_OPTIONS --dns=$DNS_SERVER "; fi
+
+docker run --rm --privileged=true --name=$containerName -ti \
+	$RUN_OPTIONS \
+	--env CC=$CC \
+	--env CXX=$CXX \
+	--env EXTRA_CFLAGS=$EXTRA_CFLAGS \
+	--env MAKE_DPKG=$MAKE_DPKG \
+	--env REMOTE_TESTS=$REMOTE_TESTS \
+	$imageName /bin/bash
+#	$imageName $command
 

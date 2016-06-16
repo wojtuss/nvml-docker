@@ -30,10 +30,21 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Get and prepare nvml source
-./prepare.sh
+# Mount filesystem for ?
+echo 'nvmlpass' | sudo -S mount -t tmpfs none /tmp -osize=4G
 
-# Build all and run tests
+# Get nvml source
+git clone https://github.com/pmem/nvml.git
 cd nvml
-make check-license && make cstyle && make -j2 USE_LIBUNWIND=1 && make -j2 test USE_LIBUNWIND=1 && make check && make DESTDIR=/tmp source
+
+# Configure tests (e.g. ssh for remote tests)
+if [[ $PLATFORM == "fedora" ]]
+then
+	(echo 'nvmlpass' | sudo -S /usr/sbin/sshd -D) &
+else
+	(echo 'nvmlpass' | sudo -S service ssh start)
+fi
+cp ../configure-tests.sh .
+./configure-tests.sh
+rm -f configure-tests.sh
 
