@@ -7,12 +7,10 @@ before_install:
         - docker pull nvml/ubuntu:16.04
 
 script:
-        - ./run.sh
+        - ./build.sh
 
 env:
   - MAKE_DPKG=1 CC=clang
   - MAKE_DPKG=1 CC=gcc
-  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND CC=clang
-  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND CC=gcc
   - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND REMOTE_TESTS=1 CC=clang
   - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND REMOTE_TESTS=1 CC=gcc
