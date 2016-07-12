@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright 2014-2016, Intel Corporation
+# Copyright 2016, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,10 +30,15 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Get and prepare nvml source
-./prepare-for-build.sh
+#
+# install-valgrind.sh - installs valgrind for persistent memory
+#
 
-# Build all and run tests
-cd nvml
-#make check-license && make cstyle && make -j2 USE_LIBUNWIND=1 && make -j2 test USE_LIBUNWIND=1 && make check && make DESTDIR=/tmp source
+git clone https://github.com/pmem/valgrind.git
+cd valgrind
+./autogen.sh
+./configure
+make
+make install
+rm -rf valgrind
 

@@ -1,6 +1,5 @@
-#!/bin/bash -e
 #
-# Copyright 2014-2016, Intel Corporation
+# Copyright 2016, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,10 +29,42 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Get and prepare nvml source
-./prepare-for-build.sh
+#
+# Dockerfile - a 'recipe' for Docker to build an image of fedora-based
+#              environment for building the NVML project.
+#
 
-# Build all and run tests
-cd nvml
-#make check-license && make cstyle && make -j2 USE_LIBUNWIND=1 && make -j2 test USE_LIBUNWIND=1 && make check && make DESTDIR=/tmp source
+# Pull base image
+FROM fedora:23
+MAINTAINER wojciech.uss@intel.com
+
+# Install basic tools
+RUN dnf install -y git gcc clang openssh-server autoconf automake make \
+	wget tar lbzip2 passwd sudo pkgconfig procps-ng net-tools jemalloc \
+	findutils man libunwind-devel file rpm-build rpm-build-libs which \
+	fuse fuse-devel ncurses-devel libuv-devel glib2-devel libtool \
+	pandoc doxygen
+
+# Install valgrind
+COPY install-valgrind.sh install-valgrind.sh
+RUN ./install-valgrind.sh
+ 
+# Install libfabric
+COPY install-libfabric.sh install-libfabric.sh
+RUN ./install-libfabric.sh
+
+# Add user
+ENV USER nvmluser
+ENV USERPASS nvmlpass
+RUN useradd -m $USER
+RUN echo $USERPASS | passwd $USER --stdin
+RUN gpasswd wheel -a $USER
+USER $USER
+
+# Set required environment variables
+ENV OS fedora
+ENV OS_VER 23
+ENV START_SSH_COMMAND /usr/sbin/sshd
+ENV PACKAGE_MANAGER rpm
+ENV NOTTY 1
 

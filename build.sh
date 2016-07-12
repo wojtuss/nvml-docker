@@ -41,12 +41,12 @@ if [ -n "$http_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env http_proxy=$http_
 if [ -n "$https_proxy" ]; then RUN_OPTIONS=" $RUN_OPTIONS --env https_proxy=$https_proxy "; fi
 if [ -n "$DNS_SERVER" ]; then RUN_OPTIONS=" $RUN_OPTIONS --dns=$DNS_SERVER "; fi
 
-docker run --rm --privileged=true --name=$containerName -ti \
-	$RUN_OPTIONS \
-	--env CC=$CC \
-	--env CXX=$CXX \
-	--env EXTRA_CFLAGS=$EXTRA_CFLAGS \
-	--env MAKE_DPKG=$MAKE_DPKG \
-	--env REMOTE_TESTS=$REMOTE_TESTS \
-	$imageName $command
+#docker run --rm --privileged=true --name=$containerName -ti \
+#	$RUN_OPTIONS \
+#	--env CC=$CC \
+#	--env CXX=$CXX \
+#	--env EXTRA_CFLAGS=$EXTRA_CFLAGS \
+#	--env MAKE_DPKG=$MAKE_DPKG \
+#	--env REMOTE_TESTS=$REMOTE_TESTS \
+#	$imageName $command
 

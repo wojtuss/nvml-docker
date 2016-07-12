@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright 2014-2016, Intel Corporation
+# Copyright 2016, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,10 +30,35 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Get and prepare nvml source
-./prepare-for-build.sh
+#
+# build-image.sh <OS:VER> - prepares a Docker image with <OS>-based
+#                           environment for building NVML project, according
+#                           to the Dockerfile.<OS:VER> file located
+#                           in the same directory.
+#
 
-# Build all and run tests
-cd nvml
-#make check-license && make cstyle && make -j2 USE_LIBUNWIND=1 && make -j2 test USE_LIBUNWIND=1 && make check && make DESTDIR=/tmp source
+function usage {
+	echo "Usage:"
+	echo "    build-image.sh <OS:VER>"
+	echo "where <OS:VER>, for example, can be 'ubuntu:16.04', provided a Dockerfile " \
+		"named 'Dockerfile.ubuntu-16.04' exists in the current directory."
+}
 
+if [[ -z "$1" ]]; then
+	usage
+	exit 1
+fi
+
+os_ver=${1/\:/-}
+
+if [[ ! -f "Dockerfile.$os_ver" ]]; then
+	echo "ERROR: wrong argument."
+	usage
+	exit 1
+fi
+
+tag=nvml/$1
+docker build -t $tag \
+	--build-arg http_proxy=$http_proxy \
+	--build-arg https_proxy=$https_proxy \
+	-f Dockerfile.$os_ver .
