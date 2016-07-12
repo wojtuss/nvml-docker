@@ -1,16 +1,14 @@
-sudo: required
-
-services:
-        - docker
-
 before_install:
-        - docker pull nvml/ubuntu:16.04
+        - git diff-tree --no-commit-id --name-only -r $TRAVIS_COMMIT
 
 script:
-        - ./build.sh
+        - echo $TRAVIS_BRANCH
+        - echo $TRAVIS_BUILD_ID
+        - echo $TRAVIS_BUILD_NUMBER
+        - echo $TRAVIS_COMMIT
+        - echo $TRAVIS_COMMIT_RANGE
+        - echo $TRAVIS_EVENT_TYPE
+        - echo $TRAVIS_PULL_REQUEST
 
 env:
-  - MAKE_DPKG=1 CC=clang
-  - MAKE_DPKG=1 CC=gcc
-  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND REMOTE_TESTS=1 CC=clang
-  - MAKE_DPKG=0 EXTRA_CFLAGS=-DUSE_VALGRIND REMOTE_TESTS=1 CC=gcc
+        - MAKE_DPKG=1 CC=clang
