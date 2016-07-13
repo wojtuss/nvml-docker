@@ -41,5 +41,5 @@ sudo apt-get update
 sudo apt-get install --force-yes docker-engine apt-transport-https ca-certificates
 
 # Pull the Docker image with environment for building nvml
-sudo docker pull nvml/${OS}:${OS_VER}
+sudo docker pull wojtuss/${OS}:${OS_VER}
 
