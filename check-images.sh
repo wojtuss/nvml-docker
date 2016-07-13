@@ -3,6 +3,10 @@
 #OS=ubuntu
 #OS_VER=16.04
 
+if [[ $TRAVIS_REPO_SLUG != "wojtuss/nvml-docker" || $TRAVIS_BRANCH != "master" ]]; then
+	exit 0
+fi
+
 commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.\.\./ } || echo $TRAVIS_COMMIT)
 echo commitRange: $commitRange
 
