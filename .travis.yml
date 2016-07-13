@@ -3,12 +3,15 @@ before_install:
 
 script:
         - echo $TRAVIS_BRANCH
+        - echo $TRAVIS_BUILD_DIR
         - echo $TRAVIS_BUILD_ID
         - echo $TRAVIS_BUILD_NUMBER
         - echo $TRAVIS_COMMIT
         - echo $TRAVIS_COMMIT_RANGE
         - echo $TRAVIS_EVENT_TYPE
         - echo $TRAVIS_PULL_REQUEST
+        - echo $TRAVIS_REPO_SLUG
+        - echo $TRAVIS_TEST_RESULT
 
 env:
         - OS=ubuntu OS_VER=16.04
