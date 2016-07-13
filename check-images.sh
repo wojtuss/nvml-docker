@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#[[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
+[[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
 
 commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.\.\./ } || echo $TRAVIS_COMMIT)
 
@@ -15,10 +15,11 @@ for file in $files; do
 	if [[ $file =~ ^($base_dir)\/Dockerfile\.($OS)-($OS_VER)$ ]] \
 		|| [[ $file =~ ^($base_dir)\/.*\.sh$ ]]
 	then
-		echo build $OS:$OS_VER
 		if [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]; then
 			echo skip pushing docker image
 		else
+			echo build $OS:$OS_VER
+			sudo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" hub.docker.com
 			echo push image to docker hub
 		fi
 		exit 0
