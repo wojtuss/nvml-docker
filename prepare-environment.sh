@@ -1,3 +1,4 @@
+#!/bin/bash -e
 #
 # Copyright 2016, Intel Corporation
 #
@@ -30,39 +31,15 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #
-# Dockerfile - a 'recipe' for Docker to build an image of ubuntu-based
-#              environment for building the NVML project.
+# prepare-environment.sh - installs Docker on the host environment and
+#                          pulls a Docker image for building NVML project.
 #
 
-# Pull base image
-FROM ubuntu:16.04
-MAINTAINER wojciech.uss@intel.com
+# Install the newest Docker engine
+sudo sh -c "echo deb https://apt.dockerproject.org/repo ubuntu-precise main >> /etc/apt/sources.list.d/docker.list"
+sudo apt-get update
+sudo apt-get install --force-yes docker-engine apt-transport-https ca-certificates
 
-# Update the Apt cache and install basic tools
-RUN apt-get update
-RUN apt-get install -y software-properties-common libunwind8-dev autoconf \
-	devscripts pkg-config ssh git gcc clang debhelper vim sudo whois \
-	libc6-dbg libncurses5-dev libuv1-dev libfuse-dev libglib2.0-dev \
-	libtool pandoc doxygen
-
-# Install valgrind
-COPY install-valgrind.sh install-valgrind.sh
-RUN ./install-valgrind.sh
- 
-# Install libfabric
-COPY install-libfabric.sh install-libfabric.sh
-RUN ./install-libfabric.sh
-
-# Add user
-ENV USER nvmluser
-ENV USERPASS nvmlpass
-RUN useradd -m $USER -g sudo -p `mkpasswd $USERPASS`
-USER $USER
-
-# Set required environment variables
-ENV OS ubuntu
-ENV OS_VER 16.04
-ENV START_SSH_COMMAND service ssh start
-ENV PACKAGE_MANAGER dpkg
-ENV NOTTY 1
+# Pull the Docker image with environment for building nvml
+sudo docker pull nvml/${OS}:${OS_VER}
 

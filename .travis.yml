@@ -1,4 +1,5 @@
 before_install:
+        - ./prepare-environment.sh
         - ./check-images.sh
 
 script:
