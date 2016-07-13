@@ -15,6 +15,7 @@ script:
 
 env:
         - OS=ubuntu OS_VER=16.04
+        - OS=fedora OS_VER=23
 
 after_success:
         - echo "check if the build is pre- or post-PR"
