@@ -1,5 +1,5 @@
 before_install:
-        - git diff-tree --no-commit-id --name-only -r $TRAVIS_COMMIT
+        - ./check-images.sh
 
 script:
         - echo $TRAVIS_BRANCH
@@ -11,4 +11,8 @@ script:
         - echo $TRAVIS_PULL_REQUEST
 
 env:
-        - MAKE_DPKG=1 CC=clang
+        - OS=ubuntu OS_VER=16.04
+
+after_success:
+        - echo "check if the build is pre- or post-PR"
+        - echo "push images to temp repo if necessary"
