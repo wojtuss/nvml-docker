@@ -18,15 +18,19 @@ for file in $files; do
 	echo file: $file
 
 	if [[ $file =~ ^($base_dir)\/ ]]; then
-		if [[ $file =~ ^($base_dir)\/Dockerfile\.$OS-$OS_VER ]]; then
-			echo Dockerfile, build: $OS:$OS_VER
-			if [[ ! $TRAVIS_PULL_REQUEST ]]; then
-				echo push image to docker hub
-			else
-				echo skip pushing docker image
+		echo some important file
+		if [[ $file =~ ^($base_dir)\/Dockerfile\. ]]; then
+			echo some Dockerfile
+			if [[ $file =~ ^($base_dir)\/Dockerfile\.$OS-$OS_VER ]]; then
+				echo build $OS:$OS_VER
+				if [[ ! $TRAVIS_PULL_REQUEST ]]; then
+					echo push image to docker hub
+				else
+					echo skip pushing docker image
+				fi
 			fi
 		else
-			echo other, build: $OS:$OS_VER
+			echo some other important files, build: $OS:$OS_VER
 			break
 		fi
 	fi
