@@ -20,6 +20,8 @@ script:
 
 env:
         - OS=ubuntu OS_VER=16.04
+        - OS=ubuntu OS_VER=16.04 AAA=3
+        - OS=ubuntu OS_VER=16.04 AAA=5
         - OS=fedora OS_VER=23
 
 after_success:
