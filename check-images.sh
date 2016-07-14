@@ -2,7 +2,7 @@
 
 # [[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
 
-commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.+/ } || echo $TRAVIS_COMMIT)
+commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.\.\./ } || echo $TRAVIS_COMMIT)
 
 files=$(git diff-tree --no-commit-id --name-only -r $commitRange)
 echo files: $files
