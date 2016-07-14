@@ -57,8 +57,8 @@ if [[ ! -f "Dockerfile.$os_ver" ]]; then
 	exit 1
 fi
 
-tag=nvml/$1
-docker build -t $tag \
+tag=wojtuss/$1
+sudo docker build -t $tag \
 	--build-arg http_proxy=$http_proxy \
 	--build-arg https_proxy=$https_proxy \
 	-f Dockerfile.$os_ver .
