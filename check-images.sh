@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# [[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
+# [[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || echo 0 && exit 0
 
 commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.\.\./ } || echo $TRAVIS_COMMIT)
 files=$(git diff-tree --no-commit-id --name-only -r $commitRange)
@@ -12,8 +12,9 @@ for file in $files; do
 		|| [[ $file =~ ^($base_dir)\/.*\.sh$ ]]
 	then
 		cd testdir && ./build-image.sh $OS:$OS_VER
-		[[ $TRAVIS_EVENT_TYPE == "pull_request" ]] || echo 1
+		[[ $TRAVIS_EVENT_TYPE == "pull_request" ]] && echo 0 || echo 1
 		exit 0
 	fi
 done
 
+echo 0
