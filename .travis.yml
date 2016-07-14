@@ -24,4 +24,4 @@ env:
 
 after_success:
         - echo $PUSH_NEW_IMAGE
-        - [[ $PUSH_NEW_IMAGE -eq 1 ]] && ./push-image.sh $OS:$OS_VER
+        - ([[ $PUSH_NEW_IMAGE -eq 1 ]] && ./push-image.sh $OS:$OS_VER)
