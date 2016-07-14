@@ -2,7 +2,7 @@
 
 [[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
 
-commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.\.\./ } || echo $TRAVIS_COMMIT)
+commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.+/ } || echo $TRAVIS_COMMIT)
 
 files=$(git diff-tree --no-commit-id --name-only -r $commitRange)
 echo files: $files
@@ -21,7 +21,7 @@ for file in $files; do
 		if [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]; then
 			echo skip pushing docker image
 		else
-			sudo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" hub.docker.com
+			sudo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 			echo push image to docker hub
 			sudo docker push wojtuss/$OS:$OS_VER
 		fi
