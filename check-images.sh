@@ -23,7 +23,7 @@ for file in $files; do
 		else
 			sudo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" hub.docker.com
 			echo push image to docker hub
-			sudo docker push wojtuss/$OS:$OS_VAR
+			sudo docker push wojtuss/$OS:$OS_VER
 		fi
 		exit 0
 	fi
