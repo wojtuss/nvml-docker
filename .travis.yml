@@ -3,6 +3,7 @@ sudo: required
 before_install:
         - ./prepare-environment.sh
         - PUSH_NEW_IMAGE=$(./check-images.sh)
+        - echo $PUSH_NEW_IMAGE
 
 script:
         - echo $TRAVIS_BRANCH
@@ -15,10 +16,12 @@ script:
         - echo $TRAVIS_PULL_REQUEST
         - echo $TRAVIS_REPO_SLUG
         - echo $TRAVIS_TEST_RESULT
+        - echo $PUSH_NEW_IMAGE
 
 env:
         - OS=ubuntu OS_VER=16.04
         - OS=fedora OS_VER=23
 
 after_success:
-        - if [[ $PUSH_NEW_IMAGE -eq 1 ]]; then ./push-image.sh $OS:$OS_VER; fi
+        - echo $PUSH_NEW_IMAGE
+        - [[ $PUSH_NEW_IMAGE -eq 1 ]] && ./push-image.sh $OS:$OS_VER

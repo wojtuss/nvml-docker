@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
+# [[ $TRAVIS_REPO_SLUG == "wojtuss/nvml-docker" && $TRAVIS_BRANCH == "master" ]] || exit 0
 
 commitRange=$([[ -n "$TRAVIS_COMMIT_RANGE" ]] && echo ${TRAVIS_COMMIT_RANGE/\.+/ } || echo $TRAVIS_COMMIT)
 
@@ -14,9 +14,7 @@ for file in $files; do
 		|| [[ $file =~ ^($base_dir)\/.*\.sh$ ]]
 	then
 		cd testdir && ./build-image.sh $OS:$OS_VER
-		if [[ $TRAVIS_EVENT_TYPE != "pull_request" ]]; then
-		       echo 1
-		fi
+		[[ $TRAVIS_EVENT_TYPE == "pull_request" ]] || echo 1
 		exit 0
 	fi
 done
