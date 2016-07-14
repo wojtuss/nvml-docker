@@ -15,7 +15,7 @@ for file in $files; do
 	then
 		cd testdir && ./build-image.sh $OS:$OS_VER
 		[[ $TRAVIS_EVENT_TYPE == "pull_request" ]] || echo 1
-		exit 0
+		exit 200
 	fi
 done
 
