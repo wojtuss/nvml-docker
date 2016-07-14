@@ -16,7 +16,7 @@ for file in $files; do
 		|| [[ $file =~ ^($base_dir)\/.*\.sh$ ]]
 	then
 		echo build $OS:$OS_VER
-		cd testdir && ./build-image.sh $OS:$OS_VAR
+		cd testdir && ./build-image.sh $OS:$OS_VER
 
 		if [[ $TRAVIS_EVENT_TYPE == "pull_request" ]]; then
 			echo skip pushing docker image
