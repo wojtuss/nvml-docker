@@ -2,7 +2,6 @@ sudo: required
 
 before_install:
         - ./prepare-environment.sh
-        - ./check-images.sh
         - PUSH_NEW_IMAGE="$(./check-images.sh)"
         - echo $PUSH_NEW_IMAGE
 
@@ -25,4 +24,4 @@ env:
 
 after_success:
         - echo $PUSH_NEW_IMAGE
-        - [ "$PUSH_NEW_IMAGE" -eq "1" ] && ./testdir/push-image.sh $OS:$OS_VER)
+        - if [[ $PUSH_NEW_IMAGE -eq 1 ]]; then ./testdir/push-image.sh $OS:$OS_VER; fi
