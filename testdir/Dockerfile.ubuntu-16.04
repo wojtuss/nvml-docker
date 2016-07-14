@@ -37,6 +37,4 @@
 # Pull base image
 FROM ubuntu:16.04
 MAINTAINER wojciech.uss@intel.com
-
-
 ENV NOTTY 1
