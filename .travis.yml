@@ -2,7 +2,7 @@ sudo: required
 
 before_install:
         - ./prepare-environment.sh
-        - PUSH_NEW_IMAGE="$(./check-images.sh)"
+        - PUSH_NEW_IMAGE="$(./check-images.sh | tail -n1)"
         - echo $PUSH_NEW_IMAGE
 
 script:
