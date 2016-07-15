@@ -2,7 +2,9 @@ sudo: required
 
 before_install:
         - ./prepare-environment.sh
-        - PUSH_NEW_IMAGE="$(./check-images.sh | tail -n1)"
+        - ./check-images.sh
+        - if [[ -f push_new_Docker_image_to_repo ]]; then PUSH_NEW_IMAGE=1; fi
+        - rm -f push_new_Docker_image_to_repo
         - echo $PUSH_NEW_IMAGE
 
 script:
