@@ -28,3 +28,5 @@ for file in $files; do
 done
 
 echo "The Docker image does not need rebuilding."
+curl -i https://registry.hub.docker.com/v2/repositories/wojtuss/$OS/tags/$OS_VER/
+
