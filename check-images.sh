@@ -19,7 +19,7 @@ for file in $files; do
 		|| [[ $file =~ ^($base_dir)\/.*\.sh$ ]]
 	then
 		echo "Rebuilding Docker image for Dockerfile\.($OS)-($OS_VER)"
-		pushd testdir
+		pushd $base_dir
 		./build-image.sh $OS:$OS_VER
 		popd
 		[[ $TRAVIS_EVENT_TYPE == "pull_request" ]] || touch push_new_Docker_image_to_repo

@@ -36,5 +36,5 @@
 sudo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 echo pushing image to docker hub
 sudo docker push wojtuss/$1 
-echo thi image pushed
-
+echo the image pushed
+sudo docker images
