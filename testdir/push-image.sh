@@ -38,3 +38,6 @@ echo pushing image to docker hub
 sudo docker push wojtuss/$1 
 echo the image pushed
 sudo docker images
+
+curl -i https://registry.hub.docker.com/v2/repositories/wojtuss/$OS/tags/$OS_VER/
+
